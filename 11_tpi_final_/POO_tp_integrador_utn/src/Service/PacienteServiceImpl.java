@@ -78,6 +78,16 @@ public class PacienteServiceImpl implements Service<Paciente> {
         }
         return pacienteDAO.getById(id);
     }
+     /** 
+     * ✅ NUEVO MÉTODO
+     * Obtiene un paciente por su DNI (solo activos, eliminado = 0).
+     */
+    public Paciente getByDni(String dni) throws Exception {
+        if (dni == null || dni.trim().isEmpty()) {
+            throw new IllegalArgumentException("El DNI no puede ser null ni vacío");
+        }
+        return pacienteDAO.getByDni(dni);
+    }
 
     /** Obtiene todos los pacientes activos. */
     @Override
@@ -86,6 +96,8 @@ public class PacienteServiceImpl implements Service<Paciente> {
 
         return pacienteDAO.getAll();
     }
+    
+    
 
     /** Valida los datos básicos del paciente antes de persistir. */
     private void validatePaciente(Paciente paciente) {

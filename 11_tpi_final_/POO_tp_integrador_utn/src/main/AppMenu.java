@@ -5,11 +5,13 @@
 package main;
 
 
-
+import Service.HistoriaClinicaServiceImpl; 
 import java.util.Scanner;
 import DAO.PacienteDAO;
 import Service.PacienteServiceImpl;
 import main.MenuHandler;
+import DAO.HistoriaClinicaDAO; 
+
 /**
  *
  * @author agust
@@ -29,9 +31,13 @@ import main.MenuHandler;
         
          PacienteDAO pacienteDAO = new PacienteDAO();
          PacienteServiceImpl pacienteService = new PacienteServiceImpl(pacienteDAO);
+         
+         // NUEVO: DAO y Service de Historia Clínica
+        HistoriaClinicaDAO historiaClinicaDAO = new HistoriaClinicaDAO();
+        HistoriaClinicaServiceImpl historiaClinicaService = new HistoriaClinicaServiceImpl(historiaClinicaDAO);
 
         // Le pasamos scanner y service al manejador del menú
-        this.menuHandler = new MenuHandler(scanner, pacienteService);
+        this.menuHandler = new MenuHandler(scanner, pacienteService,historiaClinicaService);
         this.running = true;
     }
          // Punto de entrada del programa
@@ -56,16 +62,19 @@ import main.MenuHandler;
         
 
          private void processOption(int opcion) {
-            switch (opcion) {
-            case 1 -> menuHandler.crearPaciente();
-            case 2 -> menuHandler.listarPacientes();
-            case 3 -> menuHandler.actualizarPaciente();
-            case 4 -> menuHandler.eliminarPaciente();
-            case 0 -> {
-                System.out.println("Saliendo...");
-                running = false;
-            }
-            default -> System.out.println("Opcion no valida.");
-            }
-            }
+        switch (opcion) {
+        case 1 -> menuHandler.crearPaciente();
+        case 2 -> menuHandler.listarPacientes();
+        case 3 -> menuHandler.buscarPacientePorDni();    //  buscar por DNI
+        case 4 -> menuHandler.actualizarPaciente();
+        case 5 -> menuHandler.eliminarPaciente();
+        case 6 -> menuHandler.crearHistoriaClinica();
+        case 7 -> menuHandler.listarHistoriasClinicas();
+        case 0 -> {
+            System.out.println("Saliendo...");
+            running = false;
+        }
+        default -> System.out.println("Opción no válida.");
     }
+}
+       }

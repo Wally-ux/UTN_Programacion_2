@@ -41,7 +41,12 @@ public class PacienteDAO implements DAO<Paciente> {
          WHERE eliminado = 0
          ORDER BY apellido, nombre
         """;
-
+      /** ✅ NUEVA CONSTANTE: buscar por DNI, solo activos */
+    private static final String SELECT_BY_DNI_SQL = """
+        SELECT id, nombre, apellido, dni, fecha_nacimiento, historia_clinica_id, eliminado
+          FROM paciente
+         WHERE dni = ? AND eliminado = 0
+        """;
 
     // CREATE
 
@@ -157,7 +162,25 @@ public class PacienteDAO implements DAO<Paciente> {
             throw new RuntimeException(e);
         }
     }
+    
+      /**  ✅ NUEVO MÉTODO: buscar paciente por DNI (solo activos) */
+    public Paciente getByDni(String dni) throws Exception {
+        if (dni == null || dni.trim().isEmpty()) {
+            throw new IllegalArgumentException("dni inválido");
+        }
 
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_BY_DNI_SQL)) {
+
+            ps.setString(1, dni.trim());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? mapRow(rs) : null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     @Override
     public List<Paciente> getAll() throws Exception {
         List<Paciente> list = new ArrayList<>();
